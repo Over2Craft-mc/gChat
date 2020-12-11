@@ -51,6 +51,7 @@ public class GChatConfig {
     }
 
     private final boolean passthrough;
+    private final boolean sendBungeeMessageOnlyOnDifferentServer;
 
     private final boolean requireSendPermission;
     private final Component requireSendPermissionFailMessage;
@@ -65,6 +66,7 @@ public class GChatConfig {
 
     public GChatConfig(Configuration c) {
         this.passthrough = c.getBoolean("passthrough", true);
+        this.sendBungeeMessageOnlyOnDifferentServer = c.getBoolean("sendBungeeMessageOnlyOnDifferentServer", true);
 
         this.logFile = c.getString("log-file", "gChat.log");
         this.logChat = c.getBoolean("log-chat", true);

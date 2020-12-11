@@ -98,7 +98,7 @@ public class GChatListener implements Listener {
         }
 
         // we have a format, so cancel the event.
-        e.setCancelled(true);
+        //e.setCancelled(true);
 
         // get the actual message format, and apply replacements.
         String formatText = format.getFormatText();
@@ -150,6 +150,18 @@ public class GChatListener implements Listener {
 
         // send the message to online players
         Iterable<ProxiedPlayer> recipients = Iterables.filter(plugin.getProxy().getPlayers(), p -> {
+
+            if (plugin.getConfig().isSendBungeeMessageOnlyOnDifferentServer()) {
+                if (!p.getServer().getInfo().getName().equals(((ProxiedPlayer) e.getSender()).getServer().getInfo().getName())) {
+                    boolean cancelled = plugin.getConfig().isRequireReceivePermission() && !player.hasPermission("gchat.receive");
+                    GChatMessageSendEvent sendEvent = new GChatMessageSendEvent(player, p, format, playerMessage, cancelled);
+                    plugin.getProxy().getPluginManager().callEvent(sendEvent);
+                    return !sendEvent.isCancelled();
+                }
+
+                return false;
+            }
+
             boolean cancelled = plugin.getConfig().isRequireReceivePermission() && !player.hasPermission("gchat.receive");
             GChatMessageSendEvent sendEvent = new GChatMessageSendEvent(player, p, format, playerMessage, cancelled);
             plugin.getProxy().getPluginManager().callEvent(sendEvent);

@@ -1,5 +1,9 @@
 # gChat Configuration
 
+# If set to true the message will not be sent to players that are on a different server than the player who sent the message.
+# The chat message will be passed through to the backend server
+sendBungeeMessageOnlyOnDifferentServer: true
+
 # If a player doesn't have permission for any of the formats, should the chat message be passed through to the
 # backend server or just ignored.
 passthrough: true
