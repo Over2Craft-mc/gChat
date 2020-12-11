@@ -145,9 +145,6 @@ public class GChatListener implements Listener {
         GChatMessageFormedEvent formedEvent = new GChatMessageFormedEvent(player, format, playerMessage, message);
         plugin.getProxy().getPluginManager().callEvent(formedEvent);
 
-        // log chat message
-        plugin.getChatLogger().info(PlainComponentSerializer.INSTANCE.serialize(message));
-
         // send the message to online players
         Iterable<ProxiedPlayer> recipients = Iterables.filter(plugin.getProxy().getPlayers(), p -> {
 

@@ -58,19 +58,11 @@ public class GChatConfig {
     private final boolean requireReceivePermission;
     private final boolean requirePermissionPassthrough;
 
-    private final String logFile;
-    private final boolean logChat;
-    private final boolean logChatGlobal;
-
     private final List<ChatFormat> formats;
 
     public GChatConfig(Configuration c) {
         this.passthrough = c.getBoolean("passthrough", true);
         this.sendBungeeMessageOnlyOnDifferentServer = c.getBoolean("sendBungeeMessageOnlyOnDifferentServer", true);
-
-        this.logFile = c.getString("log-file", "gChat.log");
-        this.logChat = c.getBoolean("log-chat", true);
-        this.logChatGlobal = c.getBoolean("log-chat-global", true);
 
         Configuration requirePermission = c.getSection("require-permission");
         if (requirePermission == null) {
