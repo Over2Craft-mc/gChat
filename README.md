@@ -1,5 +1,7 @@
-# gChat [![Build Status](https://ci.lucko.me/job/gChat/badge/icon)](https://ci.lucko.me/job/gChat/)
-A simple global chat plugin for BungeeCord.
+# gChat 
+Fork of the simple global chat plugin for BungeeCord from https://github.com/lucko/gChat
+* add feature to send bungee mssages to player that only are on different server and let the backend server manage chatting for local players (see config option `sendBungeeMessageOnlyOnDifferentServer`
+* Fix issue on waterfall `java.lang.NoClassDefFoundError: net/md_5/bungee/log/ConciseFormatter`
 
 * **Downloads** - <https://ci.lucko.me/job/gChat/>
 
