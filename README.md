@@ -3,7 +3,7 @@ Fork of the simple global chat plugin for BungeeCord from https://github.com/luc
 * add feature to send bungee mssages to player that only are on different server and let the backend server manage chatting for local players (see config option `sendBungeeMessageOnlyOnDifferentServer`
 * Fix issue on waterfall `java.lang.NoClassDefFoundError: net/md_5/bungee/log/ConciseFormatter`
 
-* **Downloads** - <https://over2craft-mc.github.io/gChat/target/gChat.jar>
+* **Downloads** - <https://github.com/Over2Craft-mc/gChat/raw/master/target/gChat.jar>
 
 ### Features
 * Global chat channel throughout your network
