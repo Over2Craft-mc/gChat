@@ -51,7 +51,7 @@ public class GChatListener implements Listener {
     private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)(" + String.valueOf('§') + "|&)[0-9A-FK-OR]");
     private final GChatPlugin plugin;
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onChat(ChatEvent e) {
         if (e.isCommand()) return;
         if (!(e.getSender() instanceof ProxiedPlayer)) return;
