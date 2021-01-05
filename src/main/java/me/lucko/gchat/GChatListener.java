@@ -37,13 +37,14 @@ import net.kyori.text.adapter.bungeecord.TextAdapter;
 import net.kyori.text.event.ClickEvent;
 import net.kyori.text.event.HoverEvent;
 import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.text.serializer.plain.PlainComponentSerializer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 
+import java.util.Objects;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
@@ -51,8 +52,9 @@ public class GChatListener implements Listener {
     private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)(" + String.valueOf('§') + "|&)[0-9A-FK-OR]");
     private final GChatPlugin plugin;
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onChat(ChatEvent e) {
+
         if (e.isCommand()) return;
         if (!(e.getSender() instanceof ProxiedPlayer)) return;
 
@@ -90,7 +92,7 @@ public class GChatListener implements Listener {
 
         // couldn't find a format for the player
         if (format == null) {
-            if (!plugin.getConfig().isPassthrough()) {
+            if (!plugin.getConfig().isPassthroughIfNoPerm()) {
                 e.setCancelled(true);
             }
 
@@ -148,15 +150,36 @@ public class GChatListener implements Listener {
         // send the message to online players
         Iterable<ProxiedPlayer> recipients = Iterables.filter(plugin.getProxy().getPlayers(), p -> {
 
-            if (plugin.getConfig().isSendBungeeMessageOnlyOnDifferentServer()) {
-                if (!p.getServer().getInfo().getName().equals(((ProxiedPlayer) e.getSender()).getServer().getInfo().getName())) {
+            if (p.getServer().getInfo().getName().equals(((ProxiedPlayer) e.getSender()).getServer().getInfo().getName())
+                    && plugin.getConfig().isSendBungeeMessageOnlyOnDifferentServer()) {
+
+                // Si regex match gChatSendMessageOnlyOn
+                // we send gchat message
+                Pattern patterngChatSendMessageOnlyOn = Pattern.compile(plugin.getConfig().getGChatSendMessageOnlyOn());
+                Matcher gChatSendMessageOnlyOn = patterngChatSendMessageOnlyOn.matcher(p.getServer().getInfo().getName());
+                Pattern patternpassthroughToBackend = Pattern.compile(plugin.getConfig().getPassthroughToBackend());
+                Matcher passthroughToBackend = patternpassthroughToBackend.matcher(p.getServer().getInfo().getName());
+
+                if (gChatSendMessageOnlyOn.find() && !passthroughToBackend.find()) {
+                    System.out.println(1);
                     boolean cancelled = plugin.getConfig().isRequireReceivePermission() && !player.hasPermission("gchat.receive");
                     GChatMessageSendEvent sendEvent = new GChatMessageSendEvent(player, p, format, playerMessage, cancelled);
                     plugin.getProxy().getPluginManager().callEvent(sendEvent);
-                    return !sendEvent.isCancelled();
+                    e.setCancelled(true);
+                    return true;
                 }
 
-                return false;
+                if (!gChatSendMessageOnlyOn.find() && passthroughToBackend.find()) {
+                    return false;
+                }
+
+                if (gChatSendMessageOnlyOn.find() && passthroughToBackend.find()) {
+                    System.out.println(3);
+                    boolean cancelled = plugin.getConfig().isRequireReceivePermission() && !player.hasPermission("gchat.receive");
+                    GChatMessageSendEvent sendEvent = new GChatMessageSendEvent(player, p, format, playerMessage, cancelled);
+                    plugin.getProxy().getPluginManager().callEvent(sendEvent);
+                    return true;
+                }
             }
 
             boolean cancelled = plugin.getConfig().isRequireReceivePermission() && !player.hasPermission("gchat.receive");

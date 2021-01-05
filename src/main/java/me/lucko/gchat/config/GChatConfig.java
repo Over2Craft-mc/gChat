@@ -41,6 +41,7 @@ import java.util.Map;
 @Getter
 @ToString
 public class GChatConfig {
+
     public static String getStringNonNull(Configuration configuration, String path) throws IllegalArgumentException {
         String ret = configuration.getString(path);
         if (ret == null) {
@@ -50,8 +51,11 @@ public class GChatConfig {
         return ret;
     }
 
-    private final boolean passthrough;
+    private final boolean passthroughIfNoPerm;
+
     private final boolean sendBungeeMessageOnlyOnDifferentServer;
+    private final String passthroughToBackend;
+    private final String gChatSendMessageOnlyOn;
 
     private final boolean requireSendPermission;
     private final Component requireSendPermissionFailMessage;
@@ -61,8 +65,10 @@ public class GChatConfig {
     private final List<ChatFormat> formats;
 
     public GChatConfig(Configuration c) {
-        this.passthrough = c.getBoolean("passthrough", true);
-        this.sendBungeeMessageOnlyOnDifferentServer = c.getBoolean("sendBungeeMessageOnlyOnDifferentServer", true);
+        this.passthroughIfNoPerm = c.getBoolean("passthrough", true);
+        this.sendBungeeMessageOnlyOnDifferentServer = c.getBoolean("sendBungeeMessageOnlyOnDifferentServer.enabled", true);
+        this.passthroughToBackend = c.getString("sendBungeeMessageOnlyOnDifferentServer.passthroughToBackend");
+        this.gChatSendMessageOnlyOn = c.getString("sendBungeeMessageOnlyOnDifferentServer.gChatSendMessageOnlyOn");
 
         Configuration requirePermission = c.getSection("require-permission");
         if (requirePermission == null) {
