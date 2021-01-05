@@ -30,13 +30,19 @@ gChat also provides hooks for the following plugins.
 ```yaml
 # gChat Configuration
 
-# If set to true the message will not be sent to players that are on a different server than the player who sent the message.
-# The chat message will be passed through to the backend server
-sendBungeeMessageOnlyOnDifferentServer: true
+sendBungeeMessageOnlyOnDifferentServer:
+  # If set to true the gChat message will be send only to players that are on a different server than the player who sent the message.
+  # The chat message will be passed through to the backend server
+  enabled: true
+  # Regex that match servers on which you want to send the message to the backend server of the sender
+  passthroughToBackend: "^(freebuild|creatif|over2earth)$"
+  # Regex that match servers on which you do not want gChat to send a message to players on the same backend as the sender
+  gChatSendMessageOnlyOn: "^(?!(freebuild|creatif|over2earth))(.*)$"
+
 
 # If a player doesn't have permission for any of the formats, should the chat message be passed through to the
 # backend server or just ignored.
-passthrough: true
+passthroughIfNoPerm: true
 
 # if permissions are required to send/receive chat messages
 require-permission:
@@ -66,7 +72,7 @@ formats:
     # if this format requires a permission.
     # permissions are in the format: "gchat.format.<format name>"
     # for example: "gchat.format.everyone"
-    check-permission: true
+    check-permission: false
 
     # the actual format for the chat message
     format: "{luckperms_prefix}{name}{luckperms_suffix}{message}"
@@ -99,4 +105,5 @@ formats:
       click:
         type: suggest_command
         value: "/msg {name} "
+
 ```
