@@ -45,21 +45,21 @@ formats:
     check-permission: false
 
     # the actual format for the chat message
-    format: "{luckperms_prefix}{name}{luckperms_suffix}{message}"
+    format: "&7&o【{server_name}】{luckperms_prefix}{name}{luckperms_suffix}: &f{message}"
 
     format-extra:
 
       # the format for the message tooltip
-      hover: ""
+      hover: "Cliquez pour rejoindre"
 
       # what should happen when the message is clicked?
       click:
 
         # type: can be either "none", "suggest_command", "run_command" or "open_url"
-        type: "none"
+        type: "suggest_command"
 
         # the value to suggest or run.
-        value: ""
+        value: "/{server_name}"
 
   # another format without all the comments!
   staff:
